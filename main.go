@@ -4,42 +4,60 @@ import (
 	"fmt"
 )
 
-type KathmanduTravels struct {
-	altitude int
-	location string
+// public structs and fields,methods
+
+// type Person struct {
+//     Name string
+// }
+
+// func (p Person) Greet() {
+//     fmt.Println("Hello,", p.Name)
+// }
+
+// type Employee struct {
+//     Person
+//     EmployeeID int
+// }
+
+// func main() {
+//     e := Employee{
+//         Person:     Person{Name: "Alice"},
+//         EmployeeID: 123,
+//     }
+
+//     e.Greet() // ✅ promoted method from Person
+// 	fmt.Println(e.Person)
+// }
+
+// type Person struct {
+//     Name string
+// }
+
+// func (p Person) Greet() {
+//     fmt.Println("Hello,", p.Name)
+// }
+
+// private structs and fields,methods
+
+type person struct {
+    Name string
 }
 
-func (k KathmanduTravels) showPollution(pollutionLevel int) int {
-	return k.altitude + pollutionLevel
+func (p person) greet() {
+    fmt.Println("Hello,", p.Name)
 }
 
-func (k KathmanduTravels) showHills() string {
-	return "Hilly Location:" + k.location
-}
-type LouisvilleTravels KathmanduTravels
-
-func (k LouisvilleTravels) showMallsCount(mallsCount int) int {
-	return k.altitude + mallsCount
-}
-
-func (k LouisvilleTravels) showRoads() string {
-	return "Road Location:" + k.location
+type employee struct {
+    person
+    employeeID int
 }
 
 func main() {
-	kathmanduTravels:=KathmanduTravels{
-		altitude: 1200,
-		location: "Chandragiri",
-	}
+    e := employee{
+        person:     person{Name: "Alice"},
+        employeeID: 123,
+    }
 
-	fmt.Println(kathmanduTravels.showPollution(1))
-	fmt.Println(kathmanduTravels.showHills())
-
-	louisvilleTravels:=LouisvilleTravels{
-		altitude: 400,
-		location: "Chandragiri",
-	}
-
-	fmt.Println(louisvilleTravels.showMallsCount(1))
-	fmt.Println(louisvilleTravels.showRoads())
+    e.greet() // ✅ promoted method from person
+	fmt.Println(e.person)
 }
