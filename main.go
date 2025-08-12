@@ -4,60 +4,28 @@ import (
 	"fmt"
 )
 
-// public structs and fields,methods
+type Auth struct{}
 
-// type Person struct {
-//     Name string
-// }
-
-// func (p Person) Greet() {
-//     fmt.Println("Hello,", p.Name)
-// }
-
-// type Employee struct {
-//     Person
-//     EmployeeID int
-// }
-
-// func main() {
-//     e := Employee{
-//         Person:     Person{Name: "Alice"},
-//         EmployeeID: 123,
-//     }
-
-//     e.Greet() // ✅ promoted method from Person
-// 	fmt.Println(e.Person)
-// }
-
-// type Person struct {
-//     Name string
-// }
-
-// func (p Person) Greet() {
-//     fmt.Println("Hello,", p.Name)
-// }
-
-// private structs and fields,methods
-
-type person struct {
-    Name string
+func (a *Auth) GetUser() string {
+	return "Alice"
 }
 
-func (p person) greet() {
-    fmt.Println("Hello,", p.Name)
-}
+//At first we are only concerned with Struct Auth, no generic struct that has method GetUser() is required at this time
 
-type employee struct {
-    person
-    employeeID int
+// func TakeAction(a *Auth) {
+// 	println("User:", a.GetUser())
+// }
+
+// Later we want TakeAction to take any struct which has method GetUser()
+type LogicAuth interface {
+	GetUser() string
+}
+func TakeAction(a LogicAuth) {
+	println("User:", a.GetUser())
 }
 
 func main() {
-    e := employee{
-        person:     person{Name: "Alice"},
-        employeeID: 123,
-    }
-
-    e.greet() // ✅ promoted method from person
-	fmt.Println(e.person)
+   authImplementation:=&Auth{}
+   fmt.Println(authImplementation.GetUser())
+   TakeAction(authImplementation)
 }
