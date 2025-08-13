@@ -4,28 +4,23 @@ import (
 	"fmt"
 )
 
-type Auth struct{}
-
-func (a *Auth) GetUser() string {
-	return "Alice"
-}
-
-//At first we are only concerned with Struct Auth, no generic struct that has method GetUser() is required at this time
-
-// func TakeAction(a *Auth) {
-// 	println("User:", a.GetUser())
-// }
-
-// Later we want TakeAction to take any struct which has method GetUser()
-type LogicAuth interface {
-	GetUser() string
-}
-func TakeAction(a LogicAuth) {
-	println("User:", a.GetUser())
+type Animal struct {
+	Species string
 }
 
 func main() {
-   authImplementation:=&Auth{}
-   fmt.Println(authImplementation.GetUser())
-   TakeAction(authImplementation)
+	var animalPointer interface{} = &Animal{Species: "Cat"}
+	var animalValue interface{} = Animal{Species: "Cat"}
+
+	// You must assert to the exact type (*Animal, not Animal)
+	a, ok := animalPointer.(*Animal)
+	if ok {
+		fmt.Println("Species:", a.Species)
+	}
+
+	// You must assert to the exact type (Animal, not *Animal)
+	b, ok1 := animalValue.(*Animal)
+	if ok1 {
+		fmt.Println("Species:", b.Species)
+	}
 }
