@@ -4,23 +4,29 @@ import (
 	"fmt"
 )
 
-type Animal struct {
-	Species string
+func LogOutput(message string) {
+	fmt.Println(message)
+}
+func LogOutput1(message int) {
+	fmt.Println(message)
+}
+
+type Logger interface {
+	Log(message string)
+}
+
+type LoggerAdapter func(message string)
+
+func (lg LoggerAdapter) Log(message string) {
+	lg(message)
 }
 
 func main() {
-	var animalPointer interface{} = &Animal{Species: "Cat"}
-	var animalValue interface{} = Animal{Species: "Cat"}
+	normalFunc := LogOutput
+	normalFunc("Hello")
 
-	// You must assert to the exact type (*Animal, not Animal)
-	a, ok := animalPointer.(*Animal)
-	if ok {
-		fmt.Println("Species:", a.Species)
-	}
-
-	// You must assert to the exact type (Animal, not *Animal)
-	b, ok1 := animalValue.(*Animal)
-	if ok1 {
-		fmt.Println("Species:", b.Species)
-	}
+	typeConvertedFunc := LoggerAdapter(LogOutput)
+	typeConvertedFunc("Bye")
+	// castedFunc1:=LoggerAdapter(LogOutput1)  //cannot convert LogOutput1 (value of type func(message int)) to type
+	// castedFunc1("Bye");
 }
