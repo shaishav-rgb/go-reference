@@ -4,35 +4,39 @@ import (
 	"fmt"
 )
 
-func LogOutput(message string) {
-	fmt.Println(message)
-}
-func LogOutput1(message int) {
-	fmt.Println(message)
-}
-
-type Logger interface {
-	Log(message string)
+type house struct {
+	name     string
+	height   int
+	location string
 }
 
-type LoggerAdapter func(message string)
+func (o house) computeLocation() string {
+	return "House"
+}
 
-func (lg LoggerAdapter) Log(message string) {
-	lg(message)
+type office struct {
+	name     string
+	height   int
+	location string
+}
+
+func (o office) computeLocation() string {
+	return "Office"
+}
+
+type locationer interface {
+	computeLocation() string
+}
+
+func compareInterface(o, l locationer) bool {
+	return o == l
 }
 
 func main() {
-	normalFunc := LogOutput
-	normalFunc("Hello")
+	houseValue := house{}
+	officeValue := office{}
 
-	typeConvertedFunc := LoggerAdapter(LogOutput)
-	typeConvertedFunc("Bye")
-	// castedFunc1:=LoggerAdapter(LogOutput1)  //cannot convert LogOutput1 (value of type func(message int)) to type
-	// castedFunc1("Bye");
-
-	methodToFunc := typeConvertedFunc.Log //converting a method to function, called method value
-	methodToFunc("Method To Function")
-
-	methodToFunc1:=LoggerAdapter.Log;
-	methodToFunc1(LogOutput,"Method to Function1") //converting a method to function, called method expression
+	fmt.Println(houseValue == house(officeValue))    //type has to match, gives true as struct is comparable type
+	fmt.Println(compareInterface(houseValue, officeValue))   // gives false because types are different
+	fmt.Println(compareInterface(houseValue, house(officeValue)))   // gives true because interface type and value type both match and struct is a comparable type
 }
