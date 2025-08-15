@@ -2,53 +2,65 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
-// Map turns a []T1 to a []T2 using a mapping function.
-// This function has two type parameters, T1 and T2.
-// This works with slices of any type.
-func Map[T1, T2 any](s []T1, f func(T1) T2) []T2 {
-	r := make([]T2, len(s))
-	for i, v := range s {
-		r[i] = f(v)
-	}
-	return r
+type Pair[T fmt.Stringer] struct {
+	Val1 T
+	Val2 T
 }
 
-// Reduce reduces a []T1 to a single value using a reduction function.
-func Reduce[T1, T2 any](s []T1, initializer T2, f func(T2, T1) T2) T2 {
-	r := initializer
-	for _, v := range s {
-		r = f(r, v)
-	}
-	return r
+type Differ[T any] interface {
+	fmt.Stringer
+	Diff(T) float64
 }
 
-// Filter filters values from a slice using a filter function.
-// It returns a new slice with only the elements of s
-// for which f returned true.
-func Filter[T any](s []T, f func(T) bool) []T {
-	var r []T
-	for _, v := range s {
-		if f(v) {
-			r = append(r, v)
-		}
+func FindCloser[T Differ[T]](pair1, pair2 Pair[T]) Pair[T] {
+	d1 := pair1.Val1.Diff(pair1.Val2)
+	d2 := pair2.Val1.Diff(pair2.Val2)
+	if d1 < d2 {
+		return pair1
 	}
-	return r
+	return pair2
+}
+
+
+type Point2D struct {
+	X, Y int
+}
+
+func (p2 Point2D) String() string {
+	return fmt.Sprintf("{%d,%d}", p2.X, p2.Y)
+}
+func (p2 Point2D) Diff(from Point2D) float64 {
+	x := p2.X - from.X
+	y := p2.Y - from.Y
+	return math.Sqrt(float64(x*x) + float64(y*y))
+}
+
+type Point3D struct {
+	X, Y, Z int
+}
+
+func (p3 Point3D) String() string {
+	return fmt.Sprintf("{%d,%d,%d}", p3.X, p3.Y, p3.Z)
+}
+func (p3 Point3D) Diff(from Point3D) float64 {
+	x := p3.X - from.X
+	y := p3.Y - from.Y
+	z := p3.Z - from.Z
+	return math.Sqrt(float64(x*x) + float64(y*y) + float64(z*z))
 }
 
 func main() {
-	words := []string{"One", "Potato", "Two", "Potato"}
-	filtered := Filter(words, func(s string) bool {
-		return s != "Potato"
-	})
-	fmt.Println(filtered)
+	pair2Da := Pair[Point2D]{Point2D{1, 1}, Point2D{5, 5}}
+	pair2Db := Pair[Point2D]{Point2D{10, 10}, Point2D{15, 5}}
+	closer := FindCloser(pair2Da, pair2Db)
+	fmt.Println(closer)
 
-
-	numbers := []int{1, 2, 3, 4}
-	filtered1 := Filter(numbers, func(s int) bool {
-		return s != 1
-	})
-	fmt.Println(filtered1)
+	pair3Da := Pair[Point3D]{Point3D{1, 1, 10}, Point3D{5, 5, 0}}
+	pair3Db := Pair[Point3D]{Point3D{10, 10, 10}, Point3D{11, 5, 0}}
+	closer2 := FindCloser(pair3Da, pair3Db)
+	fmt.Println(closer2)
 
 }
