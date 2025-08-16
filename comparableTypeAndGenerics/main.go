@@ -25,8 +25,9 @@ func Comparer[T comparable](t1, t2 T) {
 	}
 }
 
-func main() {
 
+
+func main() {
 	var a int = 10
 	var b int = 10
 	Comparer(a, b) // prints true
