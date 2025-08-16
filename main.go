@@ -1,21 +1,48 @@
 package main
 
 import (
-	"errors"
+	"cmp"
 	"fmt"
 )
 
-// func divAndRemainder(num, denom int) (int, int, error) {
-func divAndRemainder1(num, denom int) (float64, int, error) {
-	if denom == 0 {
-		return 0, 0, errors.New("cannot divide by zero")
+type Tree[T any] struct {
+	f OrderableFunc[T]
+}
+
+type Person struct {
+	Name string
+	Age  int
+}
+
+func (p Person) Order(other Person) int {
+	out := cmp.Compare(p.Name, other.Name)
+	if out == 0 {
+		out = cmp.Compare(p.Age, other.Age)
 	}
-	return float64(num / denom), num % denom, nil
+	return out
+}
+
+func OrderPeople(p1, p2 Person) int {
+	out := cmp.Compare(p1.Name, p2.Name)
+	if out == 0 {
+		out = cmp.Compare(p1.Age, p2.Age)
+	}
+	return out
+}
+
+type OrderableFunc[T any] func(t1, t2 T) int
+
+func NewTree[T any](f OrderableFunc[T]) *Tree[T] {
+	fmt.Println("Executing")
+	return &Tree[T]{
+		f: f,
+	}
 }
 
 func main() {
-	// division,remainder,_:=divAndRemainder(5,2);
-	division, remainder, _ := divAndRemainder1(5, 2)
-	fmt.Printf("Division:%f\nRemainder:%d\n", division, remainder)
+	var _ = NewTree(OrderPeople)
+	_ = NewTree(OrderPeople) // no error, the function executed but no variable is assigned
+	// _:= NewTree(OrderPeople)  //cannnot do implicit declare and assign using _
+	var _ = NewTree(Person.Order) // using method as a parameter to function type, Person struct becomes the first parameter
 
 }
