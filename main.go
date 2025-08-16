@@ -1,48 +1,48 @@
 package main
 
 import (
-	"cmp"
 	"fmt"
 )
 
-type Tree[T any] struct {
-	f OrderableFunc[T]
+type Thinger interface {
+	Thing()
+}
+type ThingerInt int
+
+func (t ThingerInt) Thing() {
+	fmt.Println("ThingInt:", t)
 }
 
-type Person struct {
-	Name string
-	Age  int
+type ThingerSlice []int
+
+func (t ThingerSlice) Thing() {
+	fmt.Println("ThingSlice:", t)
 }
 
-func (p Person) Order(other Person) int {
-	out := cmp.Compare(p.Name, other.Name)
-	if out == 0 {
-		out = cmp.Compare(p.Age, other.Age)
-	}
-	return out
-}
-
-func OrderPeople(p1, p2 Person) int {
-	out := cmp.Compare(p1.Name, p2.Name)
-	if out == 0 {
-		out = cmp.Compare(p1.Age, p2.Age)
-	}
-	return out
-}
-
-type OrderableFunc[T any] func(t1, t2 T) int
-
-func NewTree[T any](f OrderableFunc[T]) *Tree[T] {
-	fmt.Println("Executing")
-	return &Tree[T]{
-		f: f,
+func Comparer[T comparable](t1, t2 T) {
+	if t1 == t2 {
+		fmt.Println("equal!")
 	}
 }
 
 func main() {
-	var _ = NewTree(OrderPeople)
-	_ = NewTree(OrderPeople) // no error, the function executed but no variable is assigned
-	// _:= NewTree(OrderPeople)  //cannnot do implicit declare and assign using _
-	var _ = NewTree(Person.Order) // using method as a parameter to function type, Person struct becomes the first parameter
 
+	var a int = 10
+	var b int = 10
+	Comparer(a, b) // prints true
+	var a2 ThingerInt = 20
+	var b2 ThingerInt = 20
+	Comparer(a2, b2) // prints true
+
+	var a3 ThingerSlice = []int{1, 2, 3}
+	var b3 ThingerSlice = []int{1, 2, 3}
+	// Comparer(a3, b3) // compile fails: "ThingerSlice does not satisfy comparable"
+
+	var a4 Thinger = a2 // type of a variable can be interface(only interface with type elements cannot be a variable type. interfaces with type elements are valid only as type constraints)
+	var b4 Thinger = b2
+	Comparer(a4, b4) // prints true
+
+	a4 = a3
+	b4 = b3
+	Comparer(a4, b4) //panics as a4 and b4 are interface but underlying type is slice
 }
