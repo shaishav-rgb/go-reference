@@ -1,0 +1,1 @@
+module github.com/shaishav-rgb/go-reference/embed-hidden-files
