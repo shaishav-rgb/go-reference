@@ -5,7 +5,7 @@ import "fmt"
 // Must have struct with Name string
 // AND must implement Greet()
 type GreeterConstraint interface {
-    ~struct{ Name string } | int   // can use concrete type as type element
+    ~struct{ Name string } | ~int   // can use concrete type as type element
     Greet()
 	// float64  cannot use primitive type in interface
 }
@@ -30,7 +30,14 @@ func CallGreet[T GreeterConstraint](g T) {
     g.Greet()
 }
 
+type CustomInt int
+
+func (r CustomInt) Greet() {
+    fmt.Println("Beep, I'm", r)
+}
+
 func main() {
     CallGreet(Person{"Alice"})
     CallGreet(Robot{"R2D2"})
+    CallGreet(CustomInt(2))   // has to be "~int" in interface for custom int type CustomInt 
 }
