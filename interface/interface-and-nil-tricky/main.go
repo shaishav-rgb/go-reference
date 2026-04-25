@@ -2,15 +2,13 @@ package main
 
 import "fmt"
 
-
-
 type MyError struct{}
 
 func (e *MyError) Error() string {
     return "something went wrong"
 }
 type MyStructTypeConcrete struct{
-	name string
+    name string
 }
 
 func (e *MyStructTypeConcrete) Hey() string {
@@ -18,9 +16,10 @@ func (e *MyStructTypeConcrete) Hey() string {
 }
 
 type MyStructType interface{
-	Hey() string
+    Hey() string
 }
 
+//Reference: pg-210 learning-go,joebodner
 func doWork() error {
     var err *MyError
   
