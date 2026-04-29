@@ -33,5 +33,6 @@ func MakeBar() Bar {
 	fmt.Println(f.Hello())
 	fmt.Println(f.Hello1())   // method can be used on both original and aliased type
 	fmt.Println(bar.Hello1())   // method can be used on both original and aliased type
+	fmt.Println(f.goodbye())
 	return bar
 }

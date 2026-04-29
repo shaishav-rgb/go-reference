@@ -16,7 +16,7 @@ func (k KathmanduTravels) showPollution(pollutionLevel int) int {
 func (k KathmanduTravels) showHills() string {
 	return "Hilly Location:" + k.location
 }
-type LouisvilleTravels KathmanduTravels
+type LouisvilleTravels KathmanduTravels  // a type based on another type has the same fields as the underlying type, but not the methods.
 
 func (k LouisvilleTravels) showMallsCount(mallsCount int) int {
 	return k.altitude + mallsCount
