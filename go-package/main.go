@@ -3,6 +3,9 @@ package main //package should be named main to run
 
 import (
 	"fmt"
+	"test-go-module-package/parent/empty-folder/package1"
+	"test-go-module-package/parent/empty-folder/package2"
+
 	// initpackage "test-go-module-package/init-package" // referencing initpackage so init gets called before anything in main function
 
 	// "test-go-module-package/parent/sibling"
@@ -26,4 +29,7 @@ func main() { //function should be named main to run
 	}
 	fmt.Println("Calling cmd.Execute()!")
 	cmd.Execute()
+
+	package1.CallPackage1()
+	package2.CallPackage2()
 }
